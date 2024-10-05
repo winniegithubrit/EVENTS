@@ -6,6 +6,8 @@ from models import *
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
+app.config['SQLALCHEMY_ECHO'] = True 
+
 
 CORS(app)
 

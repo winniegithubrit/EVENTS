@@ -22,7 +22,7 @@ class User(db.Model):
     reviews = db.relationship('Review', backref='user', lazy=True)
     partnerships = db.relationship('Partnership', backref='user', lazy=True)
     invoices =  db.relationship('Invoice', backref='user', lazy=True)
-    emails = db.relationships('Email', backref='user', lazy=True)
+    emails = db.relationship('Email', backref='user', lazy=True)
     
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
