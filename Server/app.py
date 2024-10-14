@@ -14,5 +14,10 @@ CORS(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
 
+@app.route('/hello', methods=['GET'])
+def hello():
+    return "Hello, World!", 200
+
+
 if __name__ == "__main__":
     app.run()
