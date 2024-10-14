@@ -1,21 +1,27 @@
+# app.py
+
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
-from models import Event
+from config import Config
+from models import db, Event, Partnership  # Import the SQLAlchemy instance and models
 
-db = SQLAlchemy()
+# Initialize the migration tool
 migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object('config.Config')
+    app.config.from_object(Config)
     CORS(app)
+    
+    # Initialize the database and migrate with the app
     db.init_app(app)
     migrate.init_app(app, db)
 
     with app.app_context():
-        from models import Event, Partnership
+        # Create all tables
+        db.create_all()
 
     return app
 
