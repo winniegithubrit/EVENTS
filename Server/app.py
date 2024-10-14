@@ -1,6 +1,6 @@
 # app.py
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify,request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -43,6 +43,30 @@ def get_all_events():
         return jsonify(event_list), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
+    
+# get events by id
+@app.route('/events/<int:event_id>', methods=['GET'])
+def get_events_by_id(event_id):
+    event = Event.query.get(event_id)
+    if event:
+        return jsonify(event.to_dict()), 200
+    else:
+        return jsonify({'error':'Event not found'}), 404
+# post an event
+@app.route('/events', methods = ['POST'])
+def create_event():
+    data = request.json
+    image = data.get('image')
+    name = data.get('name')
+    description = data.get('description')
+    location = data.get('location')
+    date = data.get('date')
+    
+    new_event = Event(image=image,name=name,description=description,location=location, date=date)
+    db.session.add(new_event)
+    db.session.commit()
+    return jsonify(new_event.to_dict()),201
+    
+    
 if __name__ == "__main__":
     app.run(debug=True)
