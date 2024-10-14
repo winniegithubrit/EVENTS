@@ -1,23 +1,42 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
-from models import *
+from models import Event
 
-app = Flask(__name__)
-app.config.from_object('config.Config')
-app.config['SQLALCHEMY_ECHO'] = True 
+db = SQLAlchemy()
+migrate = Migrate()
 
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object('config.Config')
+    CORS(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
 
-CORS(app)
+    with app.app_context():
+        from models import Event, Partnership
 
-db = SQLAlchemy(app)
-migrate = Migrate(app,db)
+    return app
+
+app = create_app()
 
 @app.route('/hello', methods=['GET'])
 def hello():
     return "Hello, World!", 200
 
+@app.route('/')
+def index():
+    return {"message": "success"}
+
+@app.route('/events', methods=['GET'])
+def get_all_events():
+    try:
+        events = Event.query.all()
+        event_list = [event.to_dict() for event in events]
+        return jsonify(event_list), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
