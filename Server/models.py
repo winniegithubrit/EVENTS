@@ -23,6 +23,15 @@ class User(db.Model):
     partnerships = db.relationship('Partnership', backref='user', lazy=True)
     invoices = db.relationship('Invoice', backref='user', lazy=True)
     emails = db.relationship('Email', backref='user', lazy=True)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'password': self.password,
+            'created_at': self.created_at.isoformat()
+        }
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)

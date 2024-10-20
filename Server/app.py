@@ -8,6 +8,7 @@ from models import db, Event, Partnership
 from dotenv import load_dotenv
 from firebase import bucket
 from firebase_admin import credentials, storage  
+from user import userBlueprint
 
 import os
 
@@ -33,6 +34,8 @@ def create_app():
     # Initialize the database and migrate with the app
     db.init_app(app)
     migrate.init_app(app, db)
+    # registering blueprints
+    app.register_blueprint(userBlueprint)
 
     with app.app_context():
         # Create all tables
