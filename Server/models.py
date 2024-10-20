@@ -77,6 +77,14 @@ class Partnership(db.Model):
         back_populates='associated_partnerships',
         overlaps='partnerships'
     )
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'partner_name': self.partner_name,
+            'description': self.description,
+            'role': self.role
+        }
 
 class Billing(db.Model):
     id = db.Column(db.Integer, primary_key=True)

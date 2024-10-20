@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from firebase import bucket
 from firebase_admin import credentials, storage  
 from user import userBlueprint
+from partnership import partnershipBlueprint
 
 import os
 
@@ -16,7 +17,7 @@ load_dotenv()
 FIREBASE_KEY_PATH = os.getenv('FIREBASE_KEY_PATH')
 FIREBASE_BUCKET_NAME = os.getenv('FIREBASE_BUCKET_NAME')
 
-if not firebase_admin._apps:  # Check if any apps have been initialized
+if not firebase_admin._apps: 
     cred = credentials.Certificate(FIREBASE_KEY_PATH)
     firebase_admin.initialize_app(cred, {
         'storageBucket': FIREBASE_BUCKET_NAME
@@ -36,6 +37,7 @@ def create_app():
     migrate.init_app(app, db)
     # registering blueprints
     app.register_blueprint(userBlueprint)
+    app.register_blueprint(partnershipBlueprint)
 
     with app.app_context():
         # Create all tables
