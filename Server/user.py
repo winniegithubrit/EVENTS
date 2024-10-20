@@ -48,41 +48,43 @@ def login_user():
     
     try:
         user = auth.get_user_by_email(email)
-        token = auth.create_custom_token(user.uid)
-        
-        return jsonify({'message': 'User has been logged in successfully', 'token': token.decode('utf-8')}), 200
+        id_token = auth.create_custom_token(user.uid)
+        return jsonify({'message': 'User has been logged in successfully', 'token': id_token.decode('utf-8')}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 401
 
+
     
-    
-# verifying the token
 def verify_token(token):
     try:
-        decode_token = auth.verify_id_token(token)
-        return decode_token['uid']
+        # Verify the ID token
+        decoded_token = auth.verify_id_token(token)
+        return decoded_token['uid'] 
     except Exception as e:
+        print(f"Token verification error: {str(e)}")  
         return None
 
-# proect the routes
+# protected route to detect the routes
 @userBlueprint.route('/protected', methods=['GET'])
 def protected_route():
     auth_header = request.headers.get('Authorization')
-    
+
     if not auth_header:
         return jsonify({'error': 'Authorization header is missing'}), 401
-    
-    # Split the header value
-    parts = auth_header.split()
-    
-    if len(parts) != 2 or parts[0] != 'Bearer':
+
+    # Check if the header starts with "Bearer"
+    if not auth_header.startswith('Bearer '):
         return jsonify({'error': 'Invalid authorization header format'}), 401
 
-    token = parts[1]
+    # Extract the token
+    token = auth_header.split(' ')[1]
+    
+    # Verify the token
     user_id = verify_token(token)
 
     if user_id:
         return jsonify({'message': 'You are authenticated!', 'user_id': user_id}), 200
     else:
-        return jsonify({'error': 'Unauthorized'}), 401
+        return jsonify({'error': 'Unauthorized, token may be invalid'}), 401
+
 
