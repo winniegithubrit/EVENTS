@@ -10,6 +10,7 @@ from firebase import bucket
 from firebase_admin import credentials, storage  
 from user import userBlueprint
 from partnership import partnershipBlueprint
+from billing import billingBlueprint
 
 import os
 
@@ -38,6 +39,7 @@ def create_app():
     # registering blueprints
     app.register_blueprint(userBlueprint)
     app.register_blueprint(partnershipBlueprint)
+    app.register_blueprint(billingBlueprint)
 
     with app.app_context():
         # Create all tables

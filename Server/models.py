@@ -92,6 +92,15 @@ class Billing(db.Model):
     status = db.Column(db.String(50), nullable=False)  # like paid or maybe pending
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "amount": self.amount,
+            "status": self.status,
+            "user_id": self.user_id,
+            "event_id": self.event_id
+        }
 
 class Invoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
