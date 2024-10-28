@@ -11,12 +11,22 @@ from firebase_admin import credentials, storage
 from user import userBlueprint
 from partnership import partnershipBlueprint
 from billing import billingBlueprint
+from mpesa import mpesaBlueprint
+
 
 import os
 
 load_dotenv()
 FIREBASE_KEY_PATH = os.getenv('FIREBASE_KEY_PATH')
 FIREBASE_BUCKET_NAME = os.getenv('FIREBASE_BUCKET_NAME')
+
+# MPESA CREDS
+M_PESA_CONSUMER_KEY = os.getenv('M_PESA_CONSUMER_KEY')
+M_PESA_CONSUMER_SECRET = os.getenv('M_PESA_CONSUMER_SECRET')
+M_PESA_SHORTCODE = os.getenv('M_PESA_SHORTCODE')
+M_PESA_PASSWORD = os.getenv('M_PESA_PASSWORD')
+M_PESA_LIVE_URL = os.getenv('M_PESA_LIVE_URL')
+M_PESA_SANDBOX_URL = os.getenv('M_PESA_SANDBOX_URL')
 
 if not firebase_admin._apps: 
     cred = credentials.Certificate(FIREBASE_KEY_PATH)
@@ -40,6 +50,7 @@ def create_app():
     app.register_blueprint(userBlueprint)
     app.register_blueprint(partnershipBlueprint)
     app.register_blueprint(billingBlueprint)
+    app.register_blueprint(mpesaBlueprint)
 
     with app.app_context():
         # Create all tables

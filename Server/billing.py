@@ -1,5 +1,16 @@
 from flask import Blueprint, request, jsonify
 from models import Billing, db
+import os
+from dotenv import load_dotenv
+
+load_dotenv() 
+
+# M-Pesa credentials
+M_PESA_CONSUMER_KEY = os.getenv('M_PESA_CONSUMER_KEY')
+M_PESA_CONSUMER_SECRET = os.getenv('M_PESA_CONSUMER_SECRET')
+M_PESA_SHORTCODE = os.getenv('M_PESA_SHORTCODE')
+M_PESA_PASSWORD = os.getenv('M_PESA_PASSWORD')
+M_PESA_SANDBOX_URL = os.getenv('M_PESA_SANDBOX_URL')
 
 billingBlueprint = Blueprint('billing', __name__)
 
