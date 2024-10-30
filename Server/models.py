@@ -110,6 +110,17 @@ class Invoice(db.Model):
     status = db.Column(db.String(50), nullable=False)  # like paid or unpaid
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,  
+            "invoice_number": self.invoice_number,
+            "amount_due": self.amount_due,
+            "due_date": self.due_date.isoformat(),  
+            "status": self.status,
+            "user_id": self.user_id,
+            "event_id": self.event_id
+        }
 
 class Email(db.Model):
     id = db.Column(db.Integer, primary_key=True)

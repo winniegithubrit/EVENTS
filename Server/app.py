@@ -12,6 +12,7 @@ from user import userBlueprint
 from partnership import partnershipBlueprint
 from billing import billingBlueprint
 from mpesa import mpesaBlueprint
+from Invoice import invoiceBlueprint
 
 
 import os
@@ -51,6 +52,7 @@ def create_app():
     app.register_blueprint(partnershipBlueprint)
     app.register_blueprint(billingBlueprint)
     app.register_blueprint(mpesaBlueprint)
+    app.register_blueprint(invoiceBlueprint)
 
     with app.app_context():
         # Create all tables
