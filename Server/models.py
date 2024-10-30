@@ -129,6 +129,16 @@ class Email(db.Model):
     recipient = db.Column(db.String(120), nullable=False)
     sent_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    def to_dict(self):
+        return{
+            "id": self.id,
+            "subject":self.subject,
+            "body": self.body,
+            "recipient":self.recipient,
+            "sent_at":self.sent_at.isoformat(),
+            "user_id":self.user_id
+        }
 
 class Calendar(db.Model):
     id = db.Column(db.Integer, primary_key=True)

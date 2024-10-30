@@ -4,7 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from config import Config
-from models import db, Event, Partnership  
+from models import db, Event
+from flask_mail import Mail
 from dotenv import load_dotenv
 from firebase import bucket
 from firebase_admin import credentials, storage  
@@ -13,6 +14,8 @@ from partnership import partnershipBlueprint
 from billing import billingBlueprint
 from mpesa import mpesaBlueprint
 from Invoice import invoiceBlueprint
+from email_routes import emailRouteBluePrint
+
 
 
 import os
@@ -21,13 +24,13 @@ load_dotenv()
 FIREBASE_KEY_PATH = os.getenv('FIREBASE_KEY_PATH')
 FIREBASE_BUCKET_NAME = os.getenv('FIREBASE_BUCKET_NAME')
 
-# # MPESA CREDS
-# M_PESA_CONSUMER_KEY = os.getenv('M_PESA_CONSUMER_KEY')
-# M_PESA_CONSUMER_SECRET = os.getenv('M_PESA_CONSUMER_SECRET')
-# M_PESA_SHORTCODE = os.getenv('M_PESA_SHORTCODE')
-# M_PESA_PASSWORD = os.getenv('M_PESA_PASSWORD')
-# M_PESA_LIVE_URL = os.getenv('M_PESA_LIVE_URL')
-# M_PESA_SANDBOX_URL = os.getenv('M_PESA_SANDBOX_URL')
+MAIL_SERVER = os.getenv('MAIL_SERVER')
+MAIL_PORT = int(os.getenv('MAIL_PORT'))
+MAIL_USE_TLS = os.getenv('MAIL_USE_TLS') == 'False'  
+MAIL_USE_SSL = os.getenv('MAIL_USE_SSL') == 'True' 
+MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER')
 
 if not firebase_admin._apps: 
     cred = credentials.Certificate(FIREBASE_KEY_PATH)
@@ -38,6 +41,8 @@ if not firebase_admin._apps:
 
 # Initialize the migration tool
 migrate = Migrate()
+# initializing the mail functionality
+mail = Mail()
 
 def create_app():
     app = Flask(__name__)
@@ -47,12 +52,15 @@ def create_app():
     # Initialize the database and migrate with the app
     db.init_app(app)
     migrate.init_app(app, db)
+    mail.init_app(app)
     # registering blueprints
     app.register_blueprint(userBlueprint)
     app.register_blueprint(partnershipBlueprint)
     app.register_blueprint(billingBlueprint)
     app.register_blueprint(mpesaBlueprint)
     app.register_blueprint(invoiceBlueprint)
+    emailRouteBluePrint.mail = mail 
+    app.register_blueprint(emailRouteBluePrint)
 
     with app.app_context():
         # Create all tables
