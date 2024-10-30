@@ -15,7 +15,13 @@ from billing import billingBlueprint
 from mpesa import mpesaBlueprint
 from Invoice import invoiceBlueprint
 from email_routes import emailRouteBluePrint
-
+from calendar_route import calendarRouteBlueprint
+from reviews import reviewBlueprint
+from rating import ratingBlueprint
+from notifications import NotificationBlueprint
+from ticket import ticketBlueprint
+from SocialIntergration import socialIntegrationBlueprint
+from partnershipDiscount import partnershipDiscountBlueprint
 
 
 import os
@@ -61,6 +67,13 @@ def create_app():
     app.register_blueprint(invoiceBlueprint)
     emailRouteBluePrint.mail = mail 
     app.register_blueprint(emailRouteBluePrint)
+    app.register_blueprint(calendarRouteBlueprint)
+    app.register_blueprint(reviewBlueprint)
+    app.register_blueprint(ratingBlueprint)
+    app.register_blueprint(NotificationBlueprint)
+    app.register_blueprint(ticketBlueprint)
+    app.register_blueprint(socialIntegrationBlueprint)
+    app.register_blueprint(partnershipDiscountBlueprint)
 
     with app.app_context():
         # Create all tables

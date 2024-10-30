@@ -146,6 +146,15 @@ class Calendar(db.Model):
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
     details = db.Column(db.Text, nullable=True)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "event_id": self.event_id,
+            "start_time": self.start_time.isoformat(),
+            "end_time": self.end_time.isoformat(),
+            "details": self.details
+        }
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -154,11 +163,28 @@ class Review(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "rating": self.rating,
+            "comment": self.comment,
+            "user_id": self.user_id,
+            "event_id": self.event_id
+        }
+    
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.Integer, nullable=False)  
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "value": self.value,
+            "user_id": self.user_id,
+            "event_id": self.event_id
+        }
 
 class Notification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -167,6 +193,16 @@ class Notification(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     sent_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_read = db.Column(db.Boolean, default=False)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "message": self.message,
+            "user_id": self.user_id,
+            "event_id": self.event_id,
+            "sent_at": self.sent_at.isoformat(),
+            "is_read": self.is_read
+        }
 
 class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -175,6 +211,16 @@ class Ticket(db.Model):
     purchase_date = db.Column(db.DateTime, default=datetime.utcnow)
     price = db.Column(db.Float, nullable=False)
     seat_number = db.Column(db.String(50))
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "event_id": self.event_id,
+            "user_id": self.user_id,
+            "purchase_date": self.purchase_date.isoformat(),
+            "price": self.price,
+            "seat_number": self.seat_number
+        }
 
 # This model enables users to share events with one another
 class SocialIntegration(db.Model):
@@ -183,6 +229,15 @@ class SocialIntegration(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     shared_with = db.Column(db.String(120), nullable=False)  
     shared_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "event_id": self.event_id,
+            "user_id": self.user_id,
+            "shared_with": self.shared_with,
+            "shared_at": self.shared_at.isoformat()
+        }
 
 class PartnershipDiscount(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -191,3 +246,13 @@ class PartnershipDiscount(db.Model):
     discount_amount = db.Column(db.Float, nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     description = db.Column(db.Text)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "partner_id": self.partner_id,
+            "image": self.image,
+            "discount_amount": self.discount_amount,
+            "event_id": self.event_id,
+            "description": self.description
+        }
